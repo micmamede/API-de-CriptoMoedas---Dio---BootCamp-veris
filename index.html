@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>CoinMarketCap</title>
+        <link rel="stylesheet" type="text/css"
+        href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+        <meta charset="utf-8">       
+    </head>
+    <body>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item active" aria-current="page">Coin Market Cap</li>
+            </ol>
+        </nav>
+    
+        <div class="d-flex p-3 bd-highlight">
+            <div id='coins'></div>
+        </div>
+    
+        <script type="text/javascript">
+            let apikey = {
+                key: '4a939db0-7cce-4e37-8e5f-f6e74a115bda'
+            }
+            let baseUrl = 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/map?CMC_PRO_API_KEY='
+
+            fetch(baseUrl + apikey.key)
+                .then((response) => {
+                    if(!response.ok) throw new Error('Erro ao executar a requisição, status ' + response.status);
+                    return response.json();
+                })
+                .then((api) => {
+                    let texto = "";
+                    let quantidadeMoedas = 10;
+                
+                    for(let i = 0; i < quantidadeMoedas; i++){
+                        texto = texto + `                        
+                            <div class="card w-75 mb-4">
+                                <div class="row no-gutters">
+                                    <div class="col-md-4">
+                                        <img src="coin.jpg" class="card-img" alt="coin">
+                                    </div>
+                                    <div class="col-md-8">
+                                        <div class="card-body">
+                                            <h5 class="card-title">${api.data[i].name}</h5>
+                                            <p class="card-subtitle text-muted mb-4">${api.data[i].symbol}</p>
+                                            <p class="card-text"><small class="text-muted">Primeira data histórica: ${new Date(api.data[i].first_historical_data).toLocaleDateString()}</small></p> 
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                        document.getElementById("coins").innerHTML = texto;
+                    }
+                })
+                .catch((error) => {
+                    console.error(error.message);
+                });
+        </script>    
+    </body>
+</html>
